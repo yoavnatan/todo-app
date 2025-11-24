@@ -1,5 +1,5 @@
 import { todoService } from "../services/todo.service.js";
-import { SET_IS_LOADING, SET_TODOS, store } from "./store.js";
+import { REMOVE_TODO, SET_IS_LOADING, SET_TODOS, store, UPDATE_TODO, ADD_TODO } from "./store.js";
 
 export function loadTodos(filterBy) {
 
@@ -15,5 +15,31 @@ export function loadTodos(filterBy) {
         })
         .finally(() => {
             store.dispatch({ type: SET_IS_LOADING, isLoading: false })
+        })
+}
+
+export function removeTodo(todoId) {
+
+    return todoService.remove(todoId)
+        .then(() => {
+            store.dispatch({ type: REMOVE_TODO, todoId })
+        })
+        .catch(err => {
+            console.log('Cannot remove todo', err)
+            throw err
+        })
+}
+
+export function saveTodo(todoToSave) {
+    const type = todoToSave._id ? UPDATE_TODO : ADD_TODO
+
+    return todoService.save(todoToSave)
+        .then((savedTodo) => {
+            store.dispatch({ type, todo: savedTodo })
+            return savedTodo
+        })
+        .catch(err => {
+            console.log('Cannot remove todo', err)
+            throw err
         })
 }

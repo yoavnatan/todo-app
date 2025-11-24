@@ -3,7 +3,7 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { cleanObject } from "../services/util.service.js"
-import { loadTodos } from "../store/todo.actions.js"
+import { loadTodos, removeTodo, saveTodo } from "../store/todo.actions.js"
 
 
 const { useState, useEffect } = React
@@ -32,9 +32,8 @@ export function TodoIndex() {
     }, [filterBy])
 
     function onRemoveTodo(todoId) {
-        todoService.remove(todoId)
+        removeTodo(todoId)
             .then(() => {
-                setTodos(prevTodos => prevTodos.filter(todo => todo._id !== todoId))
                 showSuccessMsg(`Todo removed`)
             })
             .catch(err => {
@@ -45,9 +44,8 @@ export function TodoIndex() {
 
     function onToggleTodo(todo) {
         const todoToSave = { ...todo, isDone: !todo.isDone }
-        todoService.save(todoToSave)
+        saveTodo(todoToSave)
             .then((savedTodo) => {
-                setTodos(prevTodos => prevTodos.map(currTodo => (currTodo._id !== todo._id) ? currTodo : { ...savedTodo }))
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
             .catch(err => {
