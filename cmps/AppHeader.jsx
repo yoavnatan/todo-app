@@ -1,23 +1,27 @@
 const { useState } = React
 const { Link, NavLink } = ReactRouterDOM
 const { useNavigate } = ReactRouter
+const { useSelector } = ReactRedux
 
 import { userService } from '../services/user.service.js'
 import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from './LoginSignup.jsx'
 import { showErrorMsg } from '../services/event-bus.service.js'
+import { ProgressBar } from './ProgressBar.jsx'
 
 
 export function AppHeader() {
     const navigate = useNavigate()
     const [user, setUser] = useState(userService.getLoggedinUser())
-    
+
+    const todos = useSelector((state) => state.todos)
+
     function onLogout() {
         userService.logout()
             .then(() => {
                 onSetUser(null)
             })
-            .catch((err) => {
+            .catch(() => {
                 showErrorMsg('OOPs try again')
             })
     }
@@ -47,6 +51,7 @@ export function AppHeader() {
                     <NavLink to="/todo" >Todos</NavLink>
                     <NavLink to="/dashboard" >Dashboard</NavLink>
                 </nav>
+                {todos.length > 0 && <ProgressBar />}
             </section>
             <UserMsg />
         </header>

@@ -25,6 +25,10 @@ a.active {
     text-decoration: underline;
 }
 
+.progress {
+    width: 100%;
+}
+
 @media (max-width: 720px) {
     .app-header {
         color: var(--clr2bg-light);

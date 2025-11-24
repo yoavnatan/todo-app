@@ -29,6 +29,10 @@ function query(filterBy = {}) {
                 todos = todos.filter(todo => todo.importance >= filterBy.importance)
             }
 
+            if (filterBy.isDone) {
+                todos = todos.filter(todo => JSON.stringify(todo.isDone) === filterBy.isDone)
+            }
+
             return todos
         })
 }
@@ -125,7 +129,6 @@ function _getTodoCountByImportanceMap(todos) {
     }, { low: 0, normal: 0, urgent: 0 })
     return todoCountByImportanceMap
 }
-
 
 // Data Model:
 // const todo = {

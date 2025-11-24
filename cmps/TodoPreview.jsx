@@ -1,7 +1,10 @@
 export function TodoPreview({ todo, onToggleTodo }) {
+    const style = {
+        backgroundColor: todo.color
+    }
     return (
-        <article className="todo-preview">
-            <h2 className={(todo.isDone)? 'done' : ''} onClick={onToggleTodo}>
+        <article className="todo-preview" style={style}>
+            <h2 className={(todo.isDone) ? 'done' : ''} onClick={onToggleTodo}>
                 Todo: {todo.txt}
             </h2>
             <h4>Todo Importance: {todo.importance}</h4>

@@ -1,3 +1,4 @@
+import { todoService } from "../services/todo.service.js"
 import { userService } from "../services/user.service.js"
 
 const { createStore } = Redux
@@ -8,11 +9,15 @@ export const ADD_TODO = 'ADD_TODO'
 export const UPDATE_TODO = 'UPDATE_TODO'
 export const SET_IS_LOADING = 'SET_IS_LOADING'
 
+export const INCREMENT = 'INCREMENT'
+export const DECREMENT = 'DECREMENT'
+
 const initialState = {
     todos: [],
     isLoading: false,
     filterBy: {},
     loggedinUser: userService.getLoggedinUser(),
+    doneCounter: 0,
 }
 
 function appReducer(state = initialState, cmd = {}) {
@@ -36,6 +41,16 @@ function appReducer(state = initialState, cmd = {}) {
             return {
                 ...state,
                 todos: state.todos.map(todo => todo._id === cmd.todo._id ? cmd.todo : todo)
+            }
+        case DECREMENT:
+            return {
+                ...state,
+                doneCounter: state.doneCounter - 1
+            }
+        case INCREMENT:
+            return {
+                ...state,
+                doneCounter: state.doneCounter + 1
             }
         default: return state
     }
