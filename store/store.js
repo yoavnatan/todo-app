@@ -9,7 +9,7 @@ export const ADD_TODO = 'ADD_TODO'
 export const UPDATE_TODO = 'UPDATE_TODO'
 export const SET_IS_LOADING = 'SET_IS_LOADING'
 
-export const INCREMENT = 'INCREMENT'
+export const INCREASE_BALANCE = 'INCREASE_BALANCE'
 export const DECREMENT = 'DECREMENT'
 
 export const SET_USER = 'LOGIN'
@@ -50,10 +50,10 @@ function appReducer(state = initialState, cmd = {}) {
                 ...state,
                 doneCounter: state.doneCounter - 1
             }
-        case INCREMENT:
+        case INCREASE_BALANCE:
             return {
                 ...state,
-                doneCounter: state.doneCounter + 1
+                loggedinUser: { ...state.loggedinUser, balance: state.loggedinUser.balance + cmd.diff }
             }
         case SET_USER:
             return {

@@ -4,7 +4,7 @@ import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { cleanObject } from "../services/util.service.js"
 import { loadTodos, removeTodo, saveTodo } from "../store/todo.actions.js"
-import { DECREMENT, INCREMENT } from "../store/store.js"
+import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
 
 
 const { useState, useEffect } = React
@@ -15,6 +15,7 @@ export function TodoIndex() {
 
     const todos = useSelector((state) => state.todos)
     const isLoading = useSelector((state) => state.isLoading)
+    const loggedinUser = useSelector((state) => state.loggedinUser)
 
     // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
@@ -51,9 +52,10 @@ export function TodoIndex() {
 
     function onToggleTodo(todo) {
         const todoToSave = { ...todo, isDone: !todo.isDone }
+
         saveTodo(todoToSave)
             .then((savedTodo) => {
-                // if (savedTodo.isDone) dispatch({ type: INCREMENT })
+                if (savedTodo.isDone) dispatch({ type: INCREASE_BALANCE, diff: 10 })
                 // else if (!savedTodo.isDone) dispatch({ type: DECREMENT })
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
@@ -62,6 +64,7 @@ export function TodoIndex() {
                 showErrorMsg('Cannot toggle todo ' + todoId)
             })
     }
+
 
     function onChangeColor(target, todo) {
 
