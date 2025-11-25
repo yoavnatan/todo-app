@@ -1,4 +1,5 @@
 import { storageService } from "./async-storage.service.js"
+import { utilService } from "./util.service.js"
 
 
 export const userService = {
@@ -31,7 +32,8 @@ function login({ username, password }) {
 }
 
 function signup({ username, password, fullname }) {
-    const user = { username, password, fullname }
+    const user = { username, password, fullname, balance: 10000, activities: [] }
+    user._id = utilService.makeId()
     user.createdAt = user.updatedAt = Date.now()
 
     return storageService.post(STORAGE_KEY, user)
@@ -48,7 +50,7 @@ function getLoggedinUser() {
 }
 
 function _setLoggedinUser(user) {
-    const userToSave = { _id: user._id, fullname: user.fullname }
+    const userToSave = { _id: user._id, fullname: user.fullname, balance: user.balance, activities: user.activities }
     sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
     return userToSave
 }

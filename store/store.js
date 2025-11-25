@@ -12,6 +12,9 @@ export const SET_IS_LOADING = 'SET_IS_LOADING'
 export const INCREMENT = 'INCREMENT'
 export const DECREMENT = 'DECREMENT'
 
+export const SET_USER = 'LOGIN'
+
+
 const initialState = {
     todos: [],
     isLoading: false,
@@ -52,6 +55,12 @@ function appReducer(state = initialState, cmd = {}) {
                 ...state,
                 doneCounter: state.doneCounter + 1
             }
+        case SET_USER:
+            return {
+                ...state,
+                loggedinUser: cmd.loggedinUser
+            }
+
         default: return state
     }
 }
