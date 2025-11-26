@@ -28,7 +28,6 @@ export function AppHeader() {
     }
 
 
-    console.log(user)
     return (
         <header className="app-header full main-layout">
             <section className="header-container">

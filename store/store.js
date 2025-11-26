@@ -13,6 +13,9 @@ export const INCREASE_BALANCE = 'INCREASE_BALANCE'
 export const DECREMENT = 'DECREMENT'
 
 export const SET_USER = 'LOGIN'
+export const UPDATE_USER = 'UPDATE_USER'
+export const ADD_ACTIVITY = 'ADD_ACTIVITY'
+export const SET_USER_BALANCE = 'SET_USER_BALANCE'
 
 
 const initialState = {
@@ -60,6 +63,17 @@ function appReducer(state = initialState, cmd = {}) {
                 ...state,
                 loggedinUser: cmd.loggedinUser
             }
+        case UPDATE_USER:
+            return {
+                ...state,
+                loggedinUser: { ...state.loggedinUser, ...cmd.user }
+            }
+        case SET_USER_BALANCE:
+            return {
+                ...state,
+                loggedinUser: { ...state.loggedinUser, balance: cmd.balance }
+            }
+
 
         default: return state
     }

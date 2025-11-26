@@ -1,3 +1,6 @@
+
+
+
 import { TodoFilter } from "../cmps/TodoFilter.jsx"
 import { TodoList } from "../cmps/TodoList.jsx"
 import { todoService } from "../services/todo.service.js"
@@ -5,6 +8,7 @@ import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { cleanObject } from "../services/util.service.js"
 import { loadTodos, removeTodo, saveTodo } from "../store/todo.actions.js"
 import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
+import { addActivity, updateUser, updateBalance } from "../store/user.actions.js"
 
 
 const { useState, useEffect } = React
@@ -44,6 +48,11 @@ export function TodoIndex() {
                 // dispatch({ type: DECREMENT })
                 showSuccessMsg(`Todo removed`)
             })
+            .then(() => {
+
+                // const activity = 
+                // updateUser({ ...loggedinUser, })
+            })
             .catch(err => {
                 console.log('err:', err)
                 showErrorMsg('Cannot remove todo ' + todoId)
@@ -55,10 +64,18 @@ export function TodoIndex() {
 
         saveTodo(todoToSave)
             .then((savedTodo) => {
-                if (savedTodo.isDone) dispatch({ type: INCREASE_BALANCE, diff: 10 })
+                if (savedTodo.isDone) {
+                    // dispatch({ type: INCREASE_BALANCE, diff: 10 })
+                    updateBalance(10)
+                }
                 // else if (!savedTodo.isDone) dispatch({ type: DECREMENT })
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
+
+            // .then(() => {
+            //     // updateBalance(10)
+            //     // addActivity(loggedinUser, '' )
+            // })
             .catch(err => {
                 console.log('err:', err)
                 showErrorMsg('Cannot toggle todo ' + todoId)
