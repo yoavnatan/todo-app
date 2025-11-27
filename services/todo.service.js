@@ -38,6 +38,14 @@ function query(filterBy = {}) {
                 todos = todos.filter(todo => JSON.stringify(todo.isDone) === filterBy.isDone)
             }
 
+            if (filterBy.sort) {
+                if (filterBy.sort === 'txt') {
+                    todos = todos.sort((a, b) => a.txt.localeCompare(b.txt));
+                } else {
+                    todos = todos.sort((a, b) => a.createdAt - b.createdAt);
+                }
+            }
+
             gFilteredTodosLength = todos.length
             if (filterBy.pageIdx !== undefined) {
                 const startIdx = filterBy.pageIdx * PAGE_SIZE;

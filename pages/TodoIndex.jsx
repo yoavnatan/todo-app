@@ -10,6 +10,7 @@ import { loadTodos, removeTodo, saveTodo } from "../store/actions/todo.actions.j
 import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
 import { addActivity, updateUser, updateBalance } from "../store/actions/user.actions.js"
 import { PaginationBtns } from "../cmps/PaginationBtns.jsx"
+import { TodoSort } from "../cmps/TodoSort.jsx"
 
 const { useState, useEffect, useRef } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -92,22 +93,26 @@ export function TodoIndex() {
 
     }
 
+    function onSetFilterBy(filterBy) {
+        setFilterBy(prevFilterBy => ({ ...prevFilterBy, ...filterBy }))
+    }
+
     function onChangePageIdx(diff) {
         let newPageIdx = +filterBy.pageIdx + diff
         if (newPageIdx < 0) newPageIdx = maxPage - 1
         if (newPageIdx >= maxPage) newPageIdx = 0
         console.log(newPageIdx)
         console.log(maxPage)
-        setFilterBy(prevFilterBy => ({ ...prevFilterBy, pageIdx: newPageIdx }))
+        onSetFilterBy({ pageIdx: newPageIdx })
     }
 
     // if (!todos || todos.length <= 0) return <div>Loading...</div>
     return (
         <section className="todo-index">
-            <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />
-            <div>
-                <Link to="/todo/edit" className="btn" >Add Todo</Link>
-            </div>
+            <TodoFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
+            <TodoSort filterBy={{ sort: filterBy.sort }} onSetFilterBy={onSetFilterBy} />
+
+            <Link to="/todo/edit" className="btn" >Add Todo</Link>
             <h2>Todos List</h2>
             {isLoading
                 ? <div className="loading">Loading...</div>
