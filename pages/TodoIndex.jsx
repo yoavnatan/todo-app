@@ -6,9 +6,9 @@ import { TodoList } from "../cmps/TodoList.jsx"
 import { todoService } from "../services/todo.service.js"
 import { showErrorMsg, showSuccessMsg } from "../services/event-bus.service.js"
 import { cleanObject } from "../services/util.service.js"
-import { loadTodos, removeTodo, saveTodo } from "../store/todo.actions.js"
+import { loadTodos, removeTodo, saveTodo } from "../store/actions/todo.actions.js"
 import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
-import { addActivity, updateUser, updateBalance } from "../store/user.actions.js"
+import { addActivity, updateUser, updateBalance } from "../store/actions/user.actions.js"
 
 
 const { useState, useEffect } = React
@@ -17,9 +17,9 @@ const { Link, useSearchParams } = ReactRouterDOM
 
 export function TodoIndex() {
 
-    const todos = useSelector((state) => state.todos)
-    const isLoading = useSelector((state) => state.isLoading)
-    const loggedinUser = useSelector((state) => state.loggedinUser)
+    const todos = useSelector((storeState) => storeState.todosModule.todos)
+    const isLoading = useSelector((storeState) => storeState.todosModule.isLoading)
+    const loggedinUser = useSelector((storeState) => storeState.userModule.loggedinUser)
 
     // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
@@ -29,6 +29,9 @@ export function TodoIndex() {
     const [filterBy, setFilterBy] = useState(defaultFilter)
 
     const dispatch = useDispatch()
+
+    // const debouncedOnSetFilterBy =
+    //     useRef(debounce(onSetFilterBy, 500)).current
 
 
     useEffect(() => {
@@ -65,20 +68,13 @@ export function TodoIndex() {
         saveTodo(todoToSave)
             .then((savedTodo) => {
                 if (savedTodo.isDone) {
-                    // dispatch({ type: INCREASE_BALANCE, diff: 10 })
                     updateBalance(10)
                 }
-                // else if (!savedTodo.isDone) dispatch({ type: DECREMENT })
                 showSuccessMsg(`Todo is ${(savedTodo.isDone) ? 'done' : 'back on your list'}`)
             })
-
-            // .then(() => {
-            //     // updateBalance(10)
-            //     // addActivity(loggedinUser, '' )
-            // })
             .catch(err => {
                 console.log('err:', err)
-                showErrorMsg('Cannot toggle todo ' + todoId)
+                showErrorMsg('Cannot toggle todo ' + todo._id)
             })
     }
 
@@ -94,8 +90,7 @@ export function TodoIndex() {
             })
 
     }
-
-    if (!todos) return <div>Loading...</div>
+    // if (!todos || todos.length <= 0) return <div>Loading...</div>
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={setFilterBy} />
@@ -103,9 +98,12 @@ export function TodoIndex() {
                 <Link to="/todo/edit" className="btn" >Add Todo</Link>
             </div>
             <h2>Todos List</h2>
-            <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} onChangeColor={onChangeColor} />
-            <hr />
-            <h2>Todos Table</h2>
+            {isLoading
+                ? <div className="loading">Loading...</div>
+                : <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} onChangeColor={onChangeColor} />
+            }
+
+
         </section>
     )
 }

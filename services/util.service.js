@@ -103,3 +103,14 @@ export function getFormattedTime(at) {
     else if (atByMin > 60) return 'Couple of hours ago | '
     else if (atByMin > 60 * 24) return 'A day or more ago | '
 }
+
+export function debounce(fn, delay) {
+    let timer
+    return (...args) => {
+        // clear any pre-existing timer
+        if (timer) clearTimeout(timer)
+
+        // call the function if time expires
+        timer = setTimeout(() => fn(...args), delay)
+    }
+}

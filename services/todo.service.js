@@ -1,7 +1,10 @@
 import { utilService } from './util.service.js'
 import { storageService } from './async-storage.service.js'
+import { userService } from './user.service.js'
 
 const TODO_KEY = 'todoDB'
+const PAGE_SIZE = 4
+var gFilteredTodosLength
 _createTodos()
 
 export const todoService = {
@@ -13,11 +16,13 @@ export const todoService = {
     getDefaultFilter,
     getFilterFromSearchParams,
     getImportanceStats,
+    getDonePercentage
 }
 // For Debug (easy access from console):
 window.cs = todoService
 
 function query(filterBy = {}) {
+    // return Promise.reject()
     return storageService.query(TODO_KEY)
         .then(todos => {
             if (filterBy.txt) {
@@ -33,7 +38,16 @@ function query(filterBy = {}) {
                 todos = todos.filter(todo => JSON.stringify(todo.isDone) === filterBy.isDone)
             }
 
-            return todos
+            gFilteredTodosLength = todos.length
+            if (filterBy.pageIdx !== undefined) {
+                const startIdx = filterBy.pageIdx * PAGE_SIZE;
+                todos = todos.slice(startIdx, startIdx + PAGE_SIZE)
+            }
+            return Promise.all([getDonePercentage(), getMaxPage()])
+                .then(([doneTodosPercent, maxPage]) => {
+                    return { todos, maxPage, doneTodosPercent }
+                })
+
         })
 }
 
@@ -47,18 +61,45 @@ function get(todoId) {
 
 function remove(todoId) {
     return storageService.remove(TODO_KEY, todoId)
+        .then(() => {
+            return Promise.all([getDonePercentage(), getMaxPage()])
+                .then(([doneTodosPercent, maxPage]) => {
+                    return { maxPage, doneTodosPercent }
+                })
+        })
+        .catch(err => {
+            console.error('Cannot remove todo:', err)
+            throw err
+        })
 }
 
 function save(todo) {
-    if (todo._id) {
-        // TODO - updatable fields
-        todo.updatedAt = Date.now()
-        return storageService.put(TODO_KEY, todo)
-    } else {
-        todo.createdAt = todo.updatedAt = Date.now()
+    if (!userService.getLoggedinUser()) return Promise.reject('User is not logged in')
+    return ((todo._id) ? _edit(todo) : _add(todo))
+        .then((savedTodo) => {
+            return Promise.all([getDonePercentage(), getMaxPage()])
+                .then(([doneTodosPercent, maxPage]) =>
+                    ({ maxPage, doneTodosPercent, savedTodo })
+                )
+        })
+}
 
-        return storageService.post(TODO_KEY, todo)
-    }
+function _add(todo) {
+    todo.createdAt = todo.updatedAt = Date.now()
+    return storageService.post(TODO_KEY, todo)
+        .catch(err => {
+            console.error('Cannot add todo:', err)
+            throw err
+        })
+}
+
+function _edit(todo) {
+    todo.updatedAt = Date.now()
+    return storageService.put(TODO_KEY, todo)
+        .catch(err => {
+            console.error('Cannot update todo: ', err)
+            throw err
+        })
 }
 
 function getEmptyTodo(txt = '', importance = 5) {
@@ -130,6 +171,33 @@ function _getTodoCountByImportanceMap(todos) {
     return todoCountByImportanceMap
 }
 
+function getDonePercentage() {
+
+    return storageService.query(TODO_KEY)
+        .then(todos => {
+            const doneTodosCount = todos.reduce((acc, todo) => {
+                if (todo.isDone) acc++
+                return acc
+            }, 0)
+            return (doneTodosCount / todos.length) * 100 || 0
+        })
+        .catch(err => {
+            console.error('Cannot get done todos percent:', err)
+            throw err
+        })
+}
+
+
+function getMaxPage() {
+    if (gFilteredTodosLength) return Promise.resolve(Math.ceil(gFilteredTodosLength / PAGE_SIZE))
+
+    return storageService.query(TODO_KEY)
+        .then(todos => Math.ceil(todos.length / PAGE_SIZE))
+        .catch(err => {
+            console.error('Cannot get max page:', err)
+            throw err
+        })
+}
 // Data Model:
 // const todo = {
 //     _id: "gZ6Nvy",

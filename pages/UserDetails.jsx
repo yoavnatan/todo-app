@@ -1,5 +1,5 @@
 import { userService } from "../services/user.service.js"
-import { updateUser } from "../store/user.actions.js"
+import { updateUser } from "../store/actions/user.actions.js"
 import { utilService, getFormattedTime } from "../services/util.service.js"
 import { ActivitiesList } from "../cmps/ActivitiesList.jsx"
 
@@ -12,7 +12,7 @@ const { useParams } = ReactRouterDOM
 export function UserDetails() {
 
     const { userId } = useParams()
-    const loggedinUser = useSelector((state) => state.loggedinUser)
+    const loggedinUser = useSelector((storeState) => storeState.userModule.loggedinUser)
 
     const [userToSave, setUserToSave] = useState(loggedinUser)
 

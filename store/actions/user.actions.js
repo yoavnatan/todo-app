@@ -1,5 +1,6 @@
-import { userService } from "../services/user.service.js"
-import { ADD_ACTIVITY, SET_USER, store, UPDATE_USER, SET_USER_BALANCE } from "./store.js"
+import { userService } from "../../services/user.service.js"
+import { ADD_ACTIVITY, SET_USER, UPDATE_USER, SET_USER_BALANCE } from "../reducers/user.reducer.js"
+import { store } from "../store.js";
 
 
 export function login(credentials) {

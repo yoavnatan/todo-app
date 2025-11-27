@@ -1,81 +1,15 @@
-import { todoService } from "../services/todo.service.js"
-import { userService } from "../services/user.service.js"
+import { todosReducer } from "./reducers/todos.reducer.js"
+import { userReducer } from "./reducers/user.reducer.js"
 
-const { createStore } = Redux
+const { createStore, combineReducers, compose } = Redux
 
-export const SET_TODOS = 'SET_TODOS'
-export const REMOVE_TODO = 'REMOVE_TODO'
-export const ADD_TODO = 'ADD_TODO'
-export const UPDATE_TODO = 'UPDATE_TODO'
-export const SET_IS_LOADING = 'SET_IS_LOADING'
-
-export const INCREASE_BALANCE = 'INCREASE_BALANCE'
-export const DECREMENT = 'DECREMENT'
-
-export const SET_USER = 'LOGIN'
-export const UPDATE_USER = 'UPDATE_USER'
-export const ADD_ACTIVITY = 'ADD_ACTIVITY'
-export const SET_USER_BALANCE = 'SET_USER_BALANCE'
+const rootReducer = combineReducers({
+    todosModule: todosReducer,
+    userModule: userReducer
+})
 
 
-const initialState = {
-    todos: [],
-    isLoading: false,
-    filterBy: {},
-    loggedinUser: userService.getLoggedinUser(),
-    doneCounter: 0,
-}
-
-function appReducer(state = initialState, cmd = {}) {
-    switch (cmd.type) {
-        case SET_TODOS:
-            return {
-                ...state,
-                todos: [...cmd.todos]
-            }
-        case REMOVE_TODO:
-            return {
-                ...state,
-                todos: state.todos.filter(todo => todo._id !== cmd.todoId)
-            }
-        case ADD_TODO:
-            return {
-                ...state,
-                todos: [cmd.todo, ...state.todos]
-            }
-        case UPDATE_TODO:
-            return {
-                ...state,
-                todos: state.todos.map(todo => todo._id === cmd.todo._id ? cmd.todo : todo)
-            }
-        case DECREMENT:
-            return {
-                ...state,
-                doneCounter: state.doneCounter - 1
-            }
-        case INCREASE_BALANCE:
-            return {
-                ...state,
-                loggedinUser: { ...state.loggedinUser, balance: state.loggedinUser.balance + cmd.diff }
-            }
-        case SET_USER:
-            return {
-                ...state,
-                loggedinUser: cmd.user
-            }
-
-        case SET_USER_BALANCE:
-            return {
-                ...state,
-                loggedinUser: { ...state.loggedinUser, balance: cmd.balance }
-            }
-
-
-        default: return state
-    }
-}
-
-
-export const store = createStore(appReducer)
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+export const store = createStore(rootReducer, composeEnhancers())
 
 window.gStore = store

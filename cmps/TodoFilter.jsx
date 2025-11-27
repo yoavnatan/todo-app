@@ -1,8 +1,12 @@
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
+import { debounce } from '../services/util.service.js'
+
 
 export function TodoFilter({ filterBy, onSetFilterBy }) {
 
     const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
+
+    const debouncedOnSetFilterBy = useRef(debounce(setFilterByToEdit, 1500)).current
 
     useEffect(() => {
         // Notify parent
@@ -26,6 +30,9 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
             default: break
 
         }
+        console.log(field)
+
+        // if (field === 'txt') debouncedOnSetFilterBy(prevFilter => ({ ...prevFilter, [field]: value }))
 
         setFilterByToEdit(prevFilter => ({ ...prevFilter, [field]: value }))
     }

@@ -1,4 +1,3 @@
-const { useState } = React
 const { Link, NavLink } = ReactRouterDOM
 const { useNavigate } = ReactRouter
 const { useSelector, useDispatch } = ReactRedux
@@ -7,15 +6,15 @@ import { UserMsg } from "./UserMsg.jsx"
 import { LoginSignup } from './LoginSignup.jsx'
 import { showErrorMsg } from '../services/event-bus.service.js'
 import { ProgressBar } from './ProgressBar.jsx'
-import { logout } from '../store/user.actions.js'
+import { logout } from '../store/actions/user.actions.js'
 
 
 
 export function AppHeader() {
     const navigate = useNavigate()
 
-    const user = useSelector((state) => state.loggedinUser)
-    const todos = useSelector((state) => state.todos)
+    const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+    const todos = useSelector((storeState) => storeState.todosModule.todos)
 
     function onLogout() {
         logout()
