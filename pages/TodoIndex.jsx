@@ -11,7 +11,7 @@ import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
 import { addActivity, updateUser, updateBalance } from "../store/actions/user.actions.js"
 
 
-const { useState, useEffect } = React
+const { useState, useEffect, useRef } = React
 const { useSelector, useDispatch } = ReactRedux
 const { Link, useSearchParams } = ReactRouterDOM
 
@@ -31,7 +31,7 @@ export function TodoIndex() {
     const dispatch = useDispatch()
 
     // const debouncedOnSetFilterBy =
-    //     useRef(debounce(onSetFilterBy, 500)).current
+    //     useRef(debounce(setFilterBy, 500)).current
 
 
     useEffect(() => {

@@ -6,11 +6,16 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
 
     const [filterByToEdit, setFilterByToEdit] = useState({ ...filterBy })
 
-    const debouncedOnSetFilterBy = useRef(debounce(setFilterByToEdit, 1500)).current
+    const isTxt = useRef(false)
+
+    const debouncedOnSetFilterBy = useRef(debounce(onSetFilterBy, 500)).current
 
     useEffect(() => {
         // Notify parent
-        onSetFilterBy(filterByToEdit)
+        console.log(isTxt.current)
+        if (isTxt.current) debouncedOnSetFilterBy(filterByToEdit)
+        else onSetFilterBy(filterByToEdit)
+
     }, [filterByToEdit])
 
     function handleChange({ target }) {
@@ -32,8 +37,7 @@ export function TodoFilter({ filterBy, onSetFilterBy }) {
         }
         console.log(field)
 
-        // if (field === 'txt') debouncedOnSetFilterBy(prevFilter => ({ ...prevFilter, [field]: value }))
-
+        isTxt.current = field === 'txt' ? true : false
         setFilterByToEdit(prevFilter => ({ ...prevFilter, [field]: value }))
     }
 
