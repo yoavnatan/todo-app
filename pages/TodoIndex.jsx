@@ -9,7 +9,7 @@ import { cleanObject } from "../services/util.service.js"
 import { loadTodos, removeTodo, saveTodo } from "../store/actions/todo.actions.js"
 import { DECREMENT, INCREASE_BALANCE } from "../store/store.js"
 import { addActivity, updateUser, updateBalance } from "../store/actions/user.actions.js"
-
+import { PaginationBtns } from "../cmps/PaginationBtns.jsx"
 
 const { useState, useEffect, useRef } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -19,7 +19,7 @@ export function TodoIndex() {
 
     const todos = useSelector((storeState) => storeState.todosModule.todos)
     const isLoading = useSelector((storeState) => storeState.todosModule.isLoading)
-    const loggedinUser = useSelector((storeState) => storeState.userModule.loggedinUser)
+    const maxPage = useSelector((storeState) => storeState.todosModule.maxPage)
 
     // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
@@ -36,6 +36,7 @@ export function TodoIndex() {
 
     useEffect(() => {
         setSearchParams(cleanObject(filterBy))
+        console.log(filterBy)
         loadTodos(filterBy)
             .catch(err => {
                 console.error('err:', err)
@@ -90,6 +91,16 @@ export function TodoIndex() {
             })
 
     }
+
+    function onChangePageIdx(diff) {
+        let newPageIdx = +filterBy.pageIdx + diff
+        if (newPageIdx < 0) newPageIdx = maxPage - 1
+        if (newPageIdx >= maxPage) newPageIdx = 0
+        console.log(newPageIdx)
+        console.log(maxPage)
+        setFilterBy(prevFilterBy => ({ ...prevFilterBy, pageIdx: newPageIdx }))
+    }
+
     // if (!todos || todos.length <= 0) return <div>Loading...</div>
     return (
         <section className="todo-index">
@@ -102,7 +113,7 @@ export function TodoIndex() {
                 ? <div className="loading">Loading...</div>
                 : <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} onChangeColor={onChangeColor} />
             }
-
+            <PaginationBtns filterBy={filterBy} onChangePageIdx={onChangePageIdx} />
 
         </section>
     )
