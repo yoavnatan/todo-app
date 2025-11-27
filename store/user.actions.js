@@ -40,12 +40,14 @@ export function logout() {
 }
 
 export function updateUser(user) {
-    console.log(user)
 
-    return userService.saveUser(user)
-        .then((savedUser) => {
-            console.log(savedUser)
-            store.dispatch({ type: UPDATE_USER, user: savedUser })
+    return userService.updateUser(user)
+        .then((updatedUser) => {
+            store.dispatch({ type: SET_USER, user: updatedUser })
+        })
+        .catch(err => {
+            console.error('Cannot update user:', err)
+            throw err
         })
 
 }
@@ -56,6 +58,7 @@ export function updateBalance(diff) {
         .then(newBalance => {
             console.log(newBalance)
             store.dispatch({ type: SET_USER_BALANCE, balance: newBalance })
+            return newBalance
         })
         .catch(err => {
             throw err
@@ -63,15 +66,13 @@ export function updateBalance(diff) {
 }
 
 
+export function addActivity(txt) {
 
-
-// export function addActivity(user, activity = '') {
-
-//     const userToSave = { ...user, activities: [...user.activities, activity] }
-// }
-// return userService.saveUser(userToSave)
-//     .then((savedUser) => {
-//         store.dispatch({ type: UPDATE_USER, user: savedUser })
-//     })
-
-
+    return userService.addActivity(txt)
+        .then(user => {
+            store.dispatch({ type: SET_USER, user })
+        })
+        .catch(err => {
+            throw err
+        })
+}

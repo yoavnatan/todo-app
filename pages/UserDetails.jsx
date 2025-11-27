@@ -1,5 +1,8 @@
 import { userService } from "../services/user.service.js"
 import { updateUser } from "../store/user.actions.js"
+import { utilService, getFormattedTime } from "../services/util.service.js"
+import { ActivitiesList } from "../cmps/ActivitiesList.jsx"
+
 
 const { useState, useEffect } = React
 const { useSelector, useDispatch } = ReactRedux
@@ -41,8 +44,20 @@ export function UserDetails() {
         ev.preventDefault()
         console.log(userToSave)
         updateUser(userToSave)
+            .then(() => {
+                showSuccessMsg('User updated successfully!')
+            })
+            .catch(err => {
+                console.error('Cannot update user:', err)
+                showErrorMsg('Cannot update user')
+            })
     }
 
+    function getActivityTime(activity) {
+        const { at } = activity
+        return getFormattedTime(at)
+    }
+    const { activities } = loggedinUser
 
     return (
         <React.Fragment>
@@ -61,6 +76,13 @@ export function UserDetails() {
                         : '#fffff'} ></input>
                     <button>Save</button>
                 </form>}
+
+            {activities &&
+                <ActivitiesList
+                    activities={activities}
+                    getActivityTime={getActivityTime}
+                />
+            }
         </React.Fragment>
     )
 }

@@ -10,8 +10,9 @@ export const userService = {
     getById,
     query,
     getEmptyCredentials,
-    saveUser,
-    updateUserBalance
+    updateUser,
+    updateUserBalance,
+    addActivity
 }
 const STORAGE_KEY_LOGGEDIN = 'user'
 const STORAGE_KEY = 'userDB'
@@ -67,13 +68,22 @@ function getEmptyCredentials() {
     }
 }
 
-function saveUser(user) {
+function updateUser(userToUpdate) {
+    const loggedinUser = getLoggedinUser()
+    if (!loggedinUser) return Promise.reject('No loggedin user')
 
-    return storageService.put(STORAGE_KEY, user)
-        .then(savedUser => {
-            _setLoggedinUser(savedUser)
-            return savedUser
+    const loggedInUserId = loggedinUser._id
+    return getById(loggedInUserId)
+        .then(user => {
+            user = { ...user, ...userToUpdate }
+
+            return storageService.put(STORAGE_KEY, user)
+                .then(savedUser => {
+                    _setLoggedinUser(savedUser)
+                    return savedUser
+                })
         })
+
 
 }
 
@@ -90,6 +100,28 @@ function updateUserBalance(diff) {
         })
 }
 
+function addActivity(txt) {
+    const loggedinUser = getLoggedinUser()
+    if (!loggedinUser) return Promise.reject('No loggedin user')
+
+    const activity = { txt, at: Date.now() }
+    return getById(loggedinUser._id)
+        .then(user => {
+            if (!user.activities) user.activities = []
+            user.activities.unshift(activity)
+
+            return storageService.put(STORAGE_KEY, user)
+                .then(savedUser => {
+                    _setLoggedinUser(savedUser)
+                    return savedUser
+                })
+        })
+        .catch(err => {
+            console.log(err)
+            throw err
+        })
+
+}
 
 // signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
 // login({username: 'muki', password: 'muki1'})
