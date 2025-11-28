@@ -7,9 +7,16 @@ import { ProgressBar } from './ProgressBar.jsx'
 export function AppFooter() {
 
     const todos = useSelector((storeState) => storeState.todosModule.todos)
+    const user = useSelector((storeState) => storeState.userModule.loggedinUser)
+
+    function getStyleByUser() {
+        if (!user) return {}
+        const { color, backgroundColor } = user.prefs
+        return { color, backgroundColor }
+    }
 
     return (
-        <footer className="app-footer full main-layout">
+        <footer style={getStyleByUser()} className="app-footer full main-layout">
             <section className="footer-container">
                 {todos.length > 0 && <ProgressBar />}
             </section>

@@ -33,11 +33,17 @@ export function AppHeader() {
         dispatch({ type: TOGGLE_MENU })
     }
 
+    function getStyleByUser() {
+        if (!user) return {}
+        const { color, backgroundColor } = user.prefs
+        return { color, backgroundColor }
+    }
+
     console.log(menuIsOpen)
 
     return (
-        <header className={`app-header full main-layout ${menuIsOpen ? 'menu-open' : ''} `}>
-            <div class="main-screen" onClick={() => onToggleMenu()}></div>
+        <header style={getStyleByUser()} className={`app-header full main-layout ${menuIsOpen ? 'menu-open' : ''} `}>
+            <div className="main-screen" onClick={() => onToggleMenu()}></div>
             <section className="header-container flex">
                 <h1>Todos</h1>
                 {user ? (
@@ -53,6 +59,7 @@ export function AppHeader() {
                     </section>
                 )}
 
+                {todos.length > 0 && <ProgressBar />}
                 <button className="btn btn-menu" onClick={() => onToggleMenu()}><span className="material-symbols-outlined">
                     menu
                 </span></button>
@@ -63,7 +70,6 @@ export function AppHeader() {
                     <NavLink to="/dashboard" >Dashboard</NavLink>
                 </nav>
             </section>
-            {todos.length > 0 && <ProgressBar />}
             <UserMsg />
         </header>
     )

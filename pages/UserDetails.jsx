@@ -61,7 +61,7 @@ export function UserDetails() {
 
     return (
         <React.Fragment>
-            <pre>{JSON.stringify(loggedinUser, null, 2)}</pre>
+            {/* <pre>{JSON.stringify(loggedinUser, null, 2)}</pre> */}
             {userId === loggedinUser._id &&
                 <form className="user-Prefs" onSubmit={onSubmit}>
                     <label htmlFor="fullname">Full Name:</label>
