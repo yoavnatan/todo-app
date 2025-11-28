@@ -10,6 +10,7 @@ export const SET_DONE_TODOS_PERCENT = 'SET_DONE_TODOS_PERCENT'
 export const SET_MAX_PAGE = 'SET_MAX_PAGE'
 
 export const INCREASE_BALANCE = 'INCREASE_BALANCE'
+export const TOGGLE_MENU = 'TOGGLE_MENU'
 
 
 
@@ -19,6 +20,7 @@ const initialState = {
     filterBy: {},
     doneTodosPercent: 0,
     maxPage: null,
+    menuIsOpen: false,
 }
 
 export function todosReducer(state = initialState, cmd = {}) {
@@ -55,6 +57,11 @@ export function todosReducer(state = initialState, cmd = {}) {
             }
         case SET_IS_LOADING:
             return { ...state, isLoading: cmd.isLoading }
+        case TOGGLE_MENU:
+            return {
+                ...state,
+                menuIsOpen: !state.menuIsOpen
+            }
 
 
         default: return state

@@ -1,13 +1,14 @@
 .main-layout {
+
     display: grid;
-    grid-template-columns: 1.6rem 1fr 1.6rem;
+    grid-template-columns: minmax(16px, 1fr) minmax(auto, 980px) minmax(16px, 1fr);
 }
 
-.main-layout>* {
-    grid-column: 2;
+.main-layout>*:not(full) {
+    grid-column: 2/-2;
 }
 
-.main-layout .full {
+.main-layout>.full {
     grid-column: 1/-1;
 }
 
@@ -15,4 +16,17 @@
     max-width: 800px;
     padding: 1em;
     margin: auto;
+}
+
+
+.app {
+    grid-template-rows: auto 1fr auto;
+    height: 100vh;
+}
+
+@media (min-width: 800px) {
+    .main-layout {
+
+        grid-template-columns: minmax(16px, 1fr) minmax(auto, 980px) minmax(16px, 1fr);
+    }
 }

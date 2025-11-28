@@ -110,10 +110,10 @@ export function TodoIndex() {
     return (
         <section className="todo-index">
             <TodoFilter filterBy={filterBy} onSetFilterBy={onSetFilterBy} />
-            <TodoSort filterBy={{ sort: filterBy.sort }} onSetFilterBy={onSetFilterBy} />
-
-            <Link to="/todo/edit" className="btn" >Add Todo</Link>
-            <h2>Todos List</h2>
+            <div className="control">
+                <TodoSort filterBy={{ sort: filterBy.sort }} onSetFilterBy={onSetFilterBy} />
+                <Link to="/todo/edit" className="btn btn-add" >Add Todo</Link>
+            </div>
             {isLoading
                 ? <div className="loading">Loading...</div>
                 : <TodoList todos={todos} onRemoveTodo={onRemoveTodo} onToggleTodo={onToggleTodo} onChangeColor={onChangeColor} />

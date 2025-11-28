@@ -18,6 +18,7 @@ import { UserDetails } from "./pages/UserDetails.jsx"
 
 export function RootCmp() {
 
+
     return (<Provider store={store}>
         <Router>
             <section className="app main-layout">
@@ -38,8 +39,8 @@ export function RootCmp() {
                     </Routes>
                 </main>
                 <AppFooter />
-            </section>
-        </Router>
-    </Provider>
+            </section >
+        </Router >
+    </Provider >
     )
 }

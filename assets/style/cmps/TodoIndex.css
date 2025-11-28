@@ -1,0 +1,14 @@
+.todo-index .control {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.todo-index input {
+
+    background-color: var(--clr2bg);
+    margin: 0.5em;
+    border: 0;
+    padding: 0.5em 0.8em;
+    border-radius: 4px;
+}
