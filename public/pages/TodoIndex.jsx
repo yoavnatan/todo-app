@@ -37,7 +37,6 @@ export function TodoIndex() {
 
     useEffect(() => {
         setSearchParams(cleanObject(filterBy))
-        console.log(filterBy)
         loadTodos(filterBy)
             .catch(err => {
                 console.error('err:', err)
@@ -84,6 +83,7 @@ export function TodoIndex() {
     function onChangeColor(target, todo) {
 
         const todoToSave = { ...todo, color: target.value }
+        console.log(target.value)
         saveTodo(todoToSave)
             .then((savedTodo) => console.log(savedTodo))
             .catch((err) => {

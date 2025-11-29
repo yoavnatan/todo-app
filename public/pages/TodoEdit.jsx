@@ -16,7 +16,7 @@ export function TodoEdit() {
     }, [])
 
     function loadTodo() {
-        todoService.get(params.todoId)
+        todoService.getById(params.todoId)
             .then(setTodoToEdit)
             .catch(err => console.log('err:', err))
     }

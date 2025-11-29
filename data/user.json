@@ -1,0 +1,27 @@
+[
+    {
+        "username": "sdsddsds2222",
+        "password": "fsdsd",
+        "fullname": "sdsdds",
+        "_id": "Kam1C"
+    },
+    {
+        "username": "sdsdds",
+        "password": "sdsdsd",
+        "fullname": "sddssd",
+        "_id": "8psnO"
+    },
+    {
+        "username": "ssssdsddsddd",
+        "password": "sdsdsd",
+        "fullname": "sddssdss",
+        "_id": "acVVb"
+    },
+    {
+        "username": "admin",
+        "password": "admin",
+        "fullname": "admino",
+        "_id": "cLlRl",
+        "isAdmin": true
+    }
+]

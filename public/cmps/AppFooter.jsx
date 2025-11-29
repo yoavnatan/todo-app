@@ -11,7 +11,7 @@ export function AppFooter() {
 
     function getStyleByUser() {
         if (!user) return {}
-        const { color, backgroundColor } = user.prefs
+        const { color = 'white', backgroundColor = 'black' } = user.prefs
         return { color, backgroundColor }
     }
 

@@ -1,137 +1,77 @@
-import { storageService } from "./async-storage.service.js"
-import { utilService } from "./util.service.js"
+import fs from 'fs'
+import { readJsonFile, makeId } from './util.service.js'
 
+let users = readJsonFile('data/user.json')
 
 export const userService = {
-    getLoggedinUser,
-    login,
-    logout,
-    signup,
-    getById,
     query,
-    getEmptyCredentials,
-    updateUser,
-    updateUserBalance,
-    addActivity
+    getById,
+    getByUsername,
+    remove,
+    add,
 }
-const STORAGE_KEY_LOGGEDIN = 'user'
-const STORAGE_KEY = 'userDB'
 
 function query() {
-    return storageService.query(STORAGE_KEY)
+    const usersToReturn = users.map(user => ({
+        _id: user._id,
+        fullname: user.fullname,
+        username: user.username,
+    }))
+    return Promise.resolve(usersToReturn)
 }
 
 function getById(userId) {
-    return storageService.get(STORAGE_KEY, userId)
+    var user = users.find(user => user._id === userId)
+    if (!user) return Promise.reject('User not found!')
+
+    user = { ...user }
+    delete user.password
+
+    return Promise.resolve(user)
 }
 
-function login({ username, password }) {
-    return storageService.query(STORAGE_KEY)
-        .then(users => {
-            const user = users.find(user => user.username === username)
-            if (user) return _setLoggedinUser(user)
-            else return Promise.reject('Invalid login')
-        })
+function getByUsername(username) {
+    // You might want to remove the password validation for dev
+    var user = users.find(user => user.username === username)
+    return Promise.resolve(user)
 }
 
-function signup({ username, password, fullname }) {
-    const user = { username, password, fullname, balance: 10000, activities: [] }
-    user._id = utilService.makeId()
-    user.createdAt = user.updatedAt = Date.now()
+function remove(userId, loggedinUser) {
+    if (!loggedinUser.isAdmin) return Promise.reject('Not possible')
+    users = users.filter(user => user._id !== userId)
+    return _saveUsersToFile()
 
-    return storageService.post(STORAGE_KEY, user)
-        .then(_setLoggedinUser)
+
 }
 
-function logout() {
-    sessionStorage.removeItem(STORAGE_KEY_LOGGEDIN)
-    return Promise.resolve()
-}
+function add(user) {
 
-function getLoggedinUser() {
-    return JSON.parse(sessionStorage.getItem(STORAGE_KEY_LOGGEDIN))
-}
+    return getByUsername(user.username) //* Check if username exists...
+        .then(existingUser => {
+            if (existingUser) return Promise.reject('Username taken')
 
-function _setLoggedinUser(user) {
-    const userToSave = {
-        _id: user._id, fullname: user.fullname, balance: user.balance, activities: user.activities, prefs: user.prefs || {}
-    }
-    sessionStorage.setItem(STORAGE_KEY_LOGGEDIN, JSON.stringify(userToSave))
-    return userToSave
-}
+            user._id = makeId()
+            //* Later, we will call the authService here to encrypt the password
+            users.push(user)
 
-function getEmptyCredentials() {
-    return {
-        fullname: '',
-        username: 'muki',
-        password: 'muki1',
-    }
-}
-
-function updateUser(userToUpdate) {
-    const loggedinUser = getLoggedinUser()
-    if (!loggedinUser) return Promise.reject('No loggedin user')
-
-    const loggedInUserId = loggedinUser._id
-    return getById(loggedInUserId)
-        .then(user => {
-            user = { ...user, ...userToUpdate }
-
-            return storageService.put(STORAGE_KEY, user)
-                .then(savedUser => {
-                    _setLoggedinUser(savedUser)
-                    return savedUser
+            return _saveUsersToFile()
+                .then(() => {
+                    user = { ...user }
+                    delete user.password
+                    return user
                 })
-        })
-
-
-}
-
-function updateUserBalance(diff) {
-    const loggedInUserId = getLoggedinUser()._id
-    return userService.getById(loggedInUserId)
-        .then(user => {
-            user.balance += diff
-            return storageService.put(STORAGE_KEY, user)
-        })
-        .then(user => {
-            _setLoggedinUser(user)
-            return user.balance
+                .catch(err => console.log(err))
         })
 }
 
-function addActivity(txt) {
-    const loggedinUser = getLoggedinUser()
-    if (!loggedinUser) return Promise.reject('No loggedin user')
-
-    const activity = { txt, at: Date.now() }
-    return getById(loggedinUser._id)
-        .then(user => {
-            if (!user.activities) user.activities = []
-            user.activities.unshift(activity)
-
-            return storageService.put(STORAGE_KEY, user)
-                .then(savedUser => {
-                    _setLoggedinUser(savedUser)
-                    return savedUser
-                })
+function _saveUsersToFile() {
+    return new Promise((resolve, reject) => {
+        const usersStr = JSON.stringify(users, null, 4)
+        fs.writeFile('data/user.json', usersStr, err => {
+            if (err) {
+                return console.log(err)
+            }
+            resolve()
         })
-        .catch(err => {
-            console.log(err)
-            throw err
-        })
-
+    })
 }
-
-// signup({username: 'muki', password: 'muki1', fullname: 'Muki Ja'})
-// login({username: 'muki', password: 'muki1'})
-
-// Data Model:
-// const user = {
-//     _id: "KAtTl",
-//     username: "muki",
-//     password: "muki1",
-//     fullname: "Muki Ja",
-//     createdAt: 1711490430252,
-//     updatedAt: 1711490430999
-// }

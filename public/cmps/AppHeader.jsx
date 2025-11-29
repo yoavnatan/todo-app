@@ -35,11 +35,9 @@ export function AppHeader() {
 
     function getStyleByUser() {
         if (!user) return {}
-        const { color, backgroundColor } = user.prefs
+        const { color = '', backgroundColor = '' } = user.prefs
         return { color, backgroundColor }
     }
-
-    console.log(menuIsOpen)
 
     return (
         <header style={getStyleByUser()} className={`app-header full main-layout ${menuIsOpen ? 'menu-open' : ''} `}>
