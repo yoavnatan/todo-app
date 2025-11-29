@@ -1,38 +1,6 @@
 [
   {
     "txt": "Learn React19",
-    "importance": 6,
-    "_id": "KcqK1",
-    "updatedAt": 1764400709458,
-    "color": "#871c1c",
-    "isDone": false
-  },
-  {
-    "txt": "Learn React19",
-    "importance": 9,
-    "_id": "kepwh",
-    "updatedAt": 1764446750191,
-    "color": "#182d15",
-    "isDone": false
-  },
-  {
-    "txt": "Learn React19",
-    "importance": 9,
-    "_id": "0JAEv",
-    "updatedAt": 1764379497909,
-    "color": "#fff700",
-    "isDone": false
-  },
-  {
-    "txt": "Learn React19",
-    "importance": 9,
-    "_id": "E7oI4",
-    "updatedAt": 1764421817411,
-    "color": "#0e4da0",
-    "isDone": false
-  },
-  {
-    "txt": "Learn React19",
     "importance": 9,
     "_id": "c04vT",
     "updatedAt": 1764402306974,

@@ -21,7 +21,7 @@ export function TodoIndex() {
     const todos = useSelector((storeState) => storeState.todosModule.todos)
     const isLoading = useSelector((storeState) => storeState.todosModule.isLoading)
     const maxPage = useSelector((storeState) => storeState.todosModule.maxPage)
-
+    console.log('updated todos:', todos)
     // Special hook for accessing search-params:
     const [searchParams, setSearchParams] = useSearchParams()
 
@@ -53,7 +53,7 @@ export function TodoIndex() {
                 showSuccessMsg(`Todo removed`)
             })
             .then(() => {
-
+                loadTodos(filterBy)
                 // const activity = 
                 // updateUser({ ...loggedinUser, })
             })
