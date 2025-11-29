@@ -22,7 +22,7 @@ export function signup(credentials) {
         .then(savedUser => {
             console.log(savedUser)
 
-            store.dispatch({ type: SET_USER, loggedinUser: savedUser })
+            store.dispatch({ type: SET_USER, user: savedUser })
         })
         .catch(err => {
             console.log('Cannot signup', err)
