@@ -41,7 +41,7 @@ a.active {
     position: absolute;
     inset: 0;
     margin: auto;
-    width: fit-content;
+    width: min-content;
     height: fit-content;
     color: rgb(8, 3, 28);
 }

@@ -7,7 +7,8 @@ export function login(credentials) {
 
     return userService.login(credentials)
         .then(loggedinUser => {
-            store.dispatch({ type: SET_USER, loggedinUser })
+            store.dispatch({ type: SET_USER, user: loggedinUser })
+            return user
         })
         .catch(err => {
             console.log('Cannot login', err)
