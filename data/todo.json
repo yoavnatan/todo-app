@@ -1,10 +1,9 @@
 [
   {
     "txt": "Learn React19",
-    "importance": 9,
+    "importance": 7,
     "_id": "c04vT",
     "updatedAt": 1764402306974,
-    "createdAt": 1764402306974,
     "color": "white",
     "isDone": false
   },
@@ -22,7 +21,6 @@
     "importance": 9,
     "_id": "QvpbU",
     "updatedAt": 1764431506389,
-    "createdAt": 1764431506389,
     "color": "white",
     "isDone": false
   },

@@ -2,7 +2,7 @@
     padding: 15px 0 0;
     list-style: none;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    /* grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); */
     gap: 15px;
 }
 
@@ -11,7 +11,9 @@
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    background-color: var(--clr1bg);
+    /* background-color: var(--clr1bg); */
+    border: 1px solid var(--gray2);
+    border-radius: 15px;
 }
 
 .todo-list li section {

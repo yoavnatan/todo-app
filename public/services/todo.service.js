@@ -171,8 +171,9 @@ function getFilterFromSearchParams(searchParams) {
     return filterBy
 }
 
-function getImportanceStats() {
-    return query(TODO_KEY)
+function getImportanceStats(filterBy = {}) {
+    return axios.get(BASE_URL, { params: filterBy })
+        .then(res => res.data)
         .then(todos => {
             const todoCountByImportanceMap = _getTodoCountByImportanceMap(todos)
             const data = Object.keys(todoCountByImportanceMap).map(speedName => ({ title: speedName, value: todoCountByImportanceMap[speedName] }))

@@ -4,11 +4,17 @@
     align-items: center;
 }
 
-.todo-index input {
+input,
+select {
 
     background-color: var(--clr2bg);
     margin: 0.5em;
     border: 0;
     padding: 0.5em 0.8em;
     border-radius: 4px;
+}
+
+.todo-index input {
+    padding: .3em;
+
 }

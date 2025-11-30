@@ -35,8 +35,10 @@ export function AppHeader() {
 
     function getStyleByUser() {
         if (!user) return {}
-        const { color = '', backgroundColor = '' } = user.prefs
-        return { color, backgroundColor }
+        if (user.prefs) {
+            const { color = 'white', backgroundColor = 'black' } = user.prefs
+            return { color, backgroundColor }
+        } else return user
     }
 
     return (
